@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garagem de Veículos - Cadastro de Pessoas</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">🚘 Garagem <span>UniRV</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/pessoas" class="active">Pessoas</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">👥 Gestão de Pessoas</h1>
+                <a href="/pessoas/novo" class="btn btn-primary">➕ Cadastrar Pessoa</a>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Nome</th>
+                            <th>CPF</th>
+                            <th>E-mail</th>
+                            <th>Telefone</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="pessoa : ${pessoas}">
+                            <td th:text="${pessoa.id}">1</td>
+                            <td th:text="${pessoa.nome}">Ana Souza</td>
+                            <td th:text="${pessoa.cpf}">111.222.333-44</td>
+                            <td th:text="${pessoa.email}">ana.souza@email.com</td>
+                            <td th:text="${pessoa.telefone != null && !pessoa.telefone.empty ? pessoa.telefone : '-'}">(64) 99999-0001</td>
+                            <td class="actions">
+                                <a th:href="@{/pessoas/{id}/editar(id=${pessoa.id})}" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">✏️ Editar</a>
+                                <form th:action="@{/pessoas/{id}/excluir(id=${pessoa.id})}" method="post" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir esta pessoa?');">
+                                    <button type="submit" class="btn btn-danger" style="padding: 0.4rem 0.8rem;">🗑️ Excluir</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(pessoas)}">
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                Nenhuma pessoa cadastrada até o momento.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 UniRV - Arquitetura de Software ESW430 | Garagem de Veículos (Entrega 1)</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">Integrantes: Nycolas • Wander • Lucas • Elias</p>
+    </footer>
+
+</body>
+</html>

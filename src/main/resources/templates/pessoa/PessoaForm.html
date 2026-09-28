@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo} + ' - Garagem UniRV'">Formulário de Pessoa</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">🚘 Garagem <span>UniRV</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/pessoas" class="active">Pessoas</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card" style="max-width: 650px; margin: 0 auto;">
+            <div class="card-header">
+                <h1 class="card-title" th:text="${titulo}">Formulário de Pessoa</h1>
+                <a href="/pessoas" class="btn btn-secondary">⬅️ Voltar</a>
+            </div>
+
+            <div th:if="${erro}" class="alert-danger" th:text="${erro}">
+                Mensagem de erro aqui.
+            </div>
+
+            <form th:action="${pessoa.id != 0} ? @{/pessoas/{id}/editar(id=${pessoa.id})} : @{/pessoas/novo}" th:object="${pessoa}" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="nome">Nome Completo *</label>
+                    <input type="text" id="nome" th:field="*{nome}" class="form-control" placeholder="Ex: Ana Souza" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cpf">CPF *</label>
+                    <input type="text" id="cpf" th:field="*{cpf}" class="form-control" placeholder="000.000.000-00" maxlength="14" oninput="mascaraCPF(this)" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="email">E-mail *</label>
+                    <input type="email" id="email" th:field="*{email}" class="form-control" placeholder="Ex: ana.souza@email.com" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="telefone">Telefone (Opcional)</label>
+                    <input type="text" id="telefone" th:field="*{telefone}" class="form-control" placeholder="Ex: (64) 99999-0001" maxlength="15" oninput="mascaraTelefone(this)">
+                </div>
+
+                <div class="form-actions">
+                    <a href="/pessoas" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-success">💾 Salvar Pessoa</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 UniRV - Arquitetura de Software ESW430 | Garagem de Veículos (Entrega 1)</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">Integrantes: Nycolas • Wander • Lucas • Elias</p>
+    </footer>
+
+    <script>
+        function mascaraCPF(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d)/, '$1.$2');
+            value = value.replace(/(\d{3})(\d{1,2})$/, '$1-$2');
+            
+            input.value = value;
+        }
+
+        function mascaraTelefone(input) {
+            let value = input.value.replace(/\D/g, '');
+            if (value.length > 11) value = value.slice(0, 11);
+            
+            if (value.length > 10) {
+                value = value.replace(/^(\d{2})(\d{5})(\d{4})$/, '($1) $2-$3');
+            } else if (value.length > 5) {
+                value = value.replace(/^(\d{2})(\d{4})(\d{0,4})$/, '($1) $2-$3');
+            } else if (value.length > 2) {
+                value = value.replace(/^(\d{2})(\d{0,5})$/, '($1) $2');
+            }
+            
+            input.value = value;
+        }
+    </script>
+
+</body>
+</html>
