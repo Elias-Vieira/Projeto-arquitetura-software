@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Garagem de Veículos - Cadastro de Pessoas</title>
+    <title>Garagem de Veículos - Cadastro de Veículos</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
 <body>
@@ -14,8 +14,8 @@
             <nav>
                 <ul>
                     <li><a href="/">Reservas</a></li>
-                    <li><a href="/veiculos">Veículos</a></li>
-                    <li><a href="/pessoas" class="active">Pessoas</a></li>
+                    <li><a href="/veiculos" class="active">Veículos</a></li>
+                    <li><a href="/pessoas">Pessoas</a></li>
                 </ul>
             </nav>
         </div>
@@ -24,8 +24,8 @@
     <main class="main-content">
         <div class="card">
             <div class="card-header">
-                <h1 class="card-title">👥 Gestão de Pessoas</h1>
-                <a href="/pessoas/novo" class="btn btn-primary">➕ Cadastrar Pessoa</a>
+                <h1 class="card-title">🚗 Gestão de Veículos</h1>
+                <a href="/veiculos/novo" class="btn btn-primary">➕ Cadastrar Veículo</a>
             </div>
 
             <div th:if="${erro}" class="alert-danger" th:text="${erro}"></div>
@@ -35,30 +35,32 @@
                     <thead>
                         <tr>
                             <th>ID</th>
-                            <th>Nome</th>
-                            <th>CPF</th>
-                            <th>E-mail</th>
-                            <th>Telefone</th>
+                            <th>Placa</th>
+                            <th>Marca</th>
+                            <th>Modelo</th>
+                            <th>Ano</th>
+                            <th>Cor</th>
                             <th>Ações</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr th:each="pessoa : ${pessoas}">
-                            <td th:text="${pessoa.id}">1</td>
-                            <td th:text="${pessoa.nome}">Ana Souza</td>
-                            <td th:text="${pessoa.cpf}">111.222.333-44</td>
-                            <td th:text="${pessoa.email}">ana.souza@email.com</td>
-                            <td th:text="${pessoa.telefone != null && !pessoa.telefone.empty ? pessoa.telefone : '-'}">(64) 99999-0001</td>
+                        <tr th:each="veiculo : ${veiculos}">
+                            <td th:text="${veiculo.id}">1</td>
+                            <td style="font-weight: 600;" th:text="${veiculo.placa}">ABC-1D23</td>
+                            <td th:text="${veiculo.marca}">Toyota</td>
+                            <td th:text="${veiculo.modelo}">Corolla</td>
+                            <td th:text="${veiculo.ano}">2022</td>
+                            <td th:text="${veiculo.cor != null && !veiculo.cor.empty ? veiculo.cor : '-'}">Prata</td>
                             <td class="actions">
-                                <a th:href="@{/pessoas/{id}/editar(id=${pessoa.id})}" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">✏️ Editar</a>
-                                <form th:action="@{/pessoas/{id}/excluir(id=${pessoa.id})}" method="post" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir esta pessoa?');">
+                                <a th:href="@{/veiculos/{id}/editar(id=${veiculo.id})}" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">✏️ Editar</a>
+                                <form th:action="@{/veiculos/{id}/excluir(id=${veiculo.id})}" method="post" style="display:inline;" onsubmit="return confirm('Deseja realmente excluir este veículo?');">
                                     <button type="submit" class="btn btn-danger" style="padding: 0.4rem 0.8rem;">🗑️ Excluir</button>
                                 </form>
                             </td>
                         </tr>
-                        <tr th:if="${#lists.isEmpty(pessoas)}">
-                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                                Nenhuma pessoa cadastrada até o momento.
+                        <tr th:if="${#lists.isEmpty(veiculos)}">
+                            <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                Nenhum veículo cadastrado até o momento.
                             </td>
                         </tr>
                     </tbody>

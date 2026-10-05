@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Garagem de Veículos - Reservas</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">🚘 Garagem <span>UniRV</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/" class="active">Reservas</a></li>
+                    <li><a href="/veiculos">Veículos</a></li>
+                    <li><a href="/pessoas">Pessoas</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+
+        <!-- Card: Status Atual dos Veículos -->
+        <div class="card" style="margin-bottom: 2rem;">
+            <div class="card-header">
+                <h1 class="card-title">🚥 Status da Frota Hoje</h1>
+                <span style="font-size: 0.9rem; color: var(--text-muted);" th:text="${#temporals.format(#temporals.createToday(), 'dd/MM/yyyy')}">05/10/2026</span>
+            </div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Placa</th>
+                            <th>Veículo</th>
+                            <th>Ano</th>
+                            <th>Cor</th>
+                            <th>Status Hoje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${veiculosStatus}">
+                            <td th:text="${item.veiculo.id}">1</td>
+                            <td style="font-weight: 600;" th:text="${item.veiculo.placa}">ABC-1D23</td>
+                            <td th:text="${item.veiculo.marca + ' ' + item.veiculo.modelo}">Toyota Corolla</td>
+                            <td th:text="${item.veiculo.ano}">2022</td>
+                            <td th:text="${item.veiculo.cor != null && !item.veiculo.cor.empty ? item.veiculo.cor : '-'}">Prata</td>
+                            <td>
+                                <span th:if="${item.status == 'Disponível'}" class="badge badge-disponivel">🟢 Disponível</span>
+                                <span th:if="${item.status == 'Reservado'}" class="badge badge-reservado">🟡 Reservado</span>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(veiculosStatus)}">
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 1.5rem;">
+                                Nenhum veículo cadastrado na frota.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Card: Gestão de Reservas -->
+        <div class="card">
+            <div class="card-header">
+                <h1 class="card-title">📅 Reservas Agendadas</h1>
+                <a href="/reservas/novo" class="btn btn-primary">➕ Nova Reserva</a>
+            </div>
+
+            <div th:if="${erro}" class="alert-danger" th:text="${erro}"></div>
+
+            <div class="table-responsive">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Veículo</th>
+                            <th>Pessoa Responsável</th>
+                            <th>Data Início</th>
+                            <th>Data Fim</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="item : ${reservas}">
+                            <td th:text="${item.reserva.id}">1</td>
+                            <td style="font-weight: 600;" th:text="${item.veiculoInfo}">ABC-1D23 - Toyota Corolla</td>
+                            <td th:text="${item.pessoaNome}">Ana Souza</td>
+                            <td th:text="${#temporals.format(item.reserva.dataInicio, 'dd/MM/yyyy')}">04/10/2026</td>
+                            <td th:text="${#temporals.format(item.reserva.dataFim, 'dd/MM/yyyy')}">09/10/2026</td>
+                            <td class="actions">
+                                <a th:href="@{/reservas/{id}/editar(id=${item.reserva.id})}" class="btn btn-secondary" style="padding: 0.4rem 0.8rem;">✏️ Editar Período</a>
+                                <form th:action="@{/reservas/{id}/excluir(id=${item.reserva.id})}" method="post" style="display:inline;" onsubmit="return confirm('Deseja realmente cancelar esta reserva?');">
+                                    <button type="submit" class="btn btn-danger" style="padding: 0.4rem 0.8rem;">❌ Cancelar</button>
+                                </form>
+                            </td>
+                        </tr>
+                        <tr th:if="${#lists.isEmpty(reservas)}">
+                            <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 2rem;">
+                                Nenhuma reserva agendada até o momento.
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+    </main>
+
+    <footer>
+        <p>&copy; 2026 UniRV - Arquitetura de Software ESW430 | Garagem de Veículos (Entrega 2)</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">Integrantes: Nycolas • Wander • Lucas • Elias</p>
+    </footer>
+
+</body>
+</html>

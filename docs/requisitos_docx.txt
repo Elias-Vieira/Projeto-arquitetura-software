@@ -1,0 +1,233 @@
+Atividade Prática — Garagem de Veículos
+Arquitetura de Software • ESW430 • UniRV
+1. Objetivo
+Cada grupo vai construir o sistema Garagem de Veículos, com cadastro de pessoas, cadastro de veículos e uma página inicial de Reservas, onde um veículo é vinculado a uma pessoa por um período.
+A atividade coloca em prática a Aula 3: MVC + padrão Repository + Injeção de Dependência, seguindo os princípios SOLID. A regra central é a mesma dos slides: o Controller nunca deve saber como os dados são salvos.
+2. Regras gerais e prazos
+São duas entregas: Pessoas até hoje, 28/09, às 20:50, e Veículos + Reservas até segunda-feira, 05/10, às 19:00.
+Item
+Regra
+Grupos
+Até 4 integrantes
+Linguagem
+Java ou C#, à escolha do grupo
+Framework sugerido
+C#: ASP.NET Core MVC (.NET 8 ou superior) · Java: Spring Boot com Spring Web + Thymeleaf (JDK 17 ou superior)
+Arquitetura
+MVC + Repository + Injeção de Dependência, seguindo SOLID (obrigatório)
+Persistência
+Arquivos .json (obrigatório). Os dados precisam continuar lá depois de fechar e abrir a aplicação
+Login
+Não é exigido. Quem usa o sistema é o administrador
+Uso de IA
+Permitido (ChatGPT, Copilot, Claude, Gemini etc.)
+Sobre o uso de IA: a IA pode escrever código, mas a arquitetura é responsabilidade do grupo. Qualquer integrante pode ser chamado para explicar uma parte do projeto, por exemplo por que o Controller recebe uma interface. Informem no README quais ferramentas usaram.
+3. Arquitetura obrigatória
+Cada entidade precisa de cinco arquivos com estes nomes: Model, Interface do repositório, Repositório, Controller e View de formulário. O caminho dos dados é sempre View → Controller → Interface → Repositório → arquivo JSON.
+
+Arquitetura exigida · exemplo com Pessoa
+Se amanhã o JSON virar banco de dados, só o PessoaRepository muda: Controller e Views continuam iguais.
+Arquivos exigidos (exemplo: Pessoa)
+Papel
+C# (ASP.NET Core MVC)
+Java (Spring Boot + Thymeleaf)
+Model
+Models/Pessoa.cs
+model/Pessoa.java
+Contrato (interface)
+Repositories/IPessoaRepository.cs
+repository/IPessoaRepository.java
+Implementação (JSON)
+Repositories/PessoaRepository.cs
+repository/PessoaRepository.java
+Controller
+Controllers/PessoaController.cs
+controller/PessoaController.java
+View do formulário
+Views/Pessoa/PessoaForm.cshtml
+templates/pessoa/PessoaForm.html
+View da listagem
+Views/Pessoa/Index.cshtml
+templates/pessoa/index.html
+Registro da DI
+Program.cs: AddScoped<IPessoaRepository, PessoaRepository>()
+@Repository na classe + injeção pelo construtor
+O mesmo conjunto vale para Veículo (Veiculo, IVeiculoRepository, VeiculoRepository, VeiculoController, VeiculoForm) e, na Entrega 2, para Reserva. Use nomes de classe sem acento (Veiculo, não Veículo).
+Se o grupo usar Java desktop (Swing ou JavaFX), a View passa a ser view/PessoaForm.java e a injeção é feita no Main, passando o repositório no construtor do Controller. O resto da estrutura não muda.
+Estrutura de pastas sugerida
+C#
+GaragemVeiculos/├── Controllers/│   ├── PessoaController.cs│   ├── VeiculoController.cs│   └── ReservaController.cs├── Models/│   ├── Pessoa.cs│   ├── Veiculo.cs│   └── Reserva.cs├── Repositories/│   ├── IPessoaRepository.cs│   ├── PessoaRepository.cs│   └── ... (Veiculo, Reserva)├── Views/│   ├── Pessoa/   Index.cshtml, PessoaForm.cshtml│   ├── Veiculo/  Index.cshtml, VeiculoForm.cshtml│   └── Reserva/  Index.cshtml├── Data/│   ├── pessoas.json│   ├── veiculos.json│   └── reservas.json└── Program.cs
+Java
+garagem-veiculos/├── src/main/java/br/edu/unirv/garagem/│   ├── GaragemApplication.java│   ├── model/│   │   ├── Pessoa.java│   │   ├── Veiculo.java│   │   └── Reserva.java│   ├── repository/│   │   ├── IPessoaRepository.java│   │   ├── PessoaRepository.java│   │   └── ... (Veiculo, Reserva)│   └── controller/│       ├── PessoaController.java│       ├── VeiculoController.java│       └── ReservaController.java├── src/main/resources/templates/│   ├── pessoa/   index.html, PessoaForm.html│   ├── veiculo/  index.html, VeiculoForm.html│   └── reserva/  index.html└── data/    ├── pessoas.json    ├── veiculos.json    └── reservas.json
+Contrato mínimo do repositório
+O Controller conversa somente com esta interface. O grupo pode acrescentar métodos, mas estes cinco são obrigatórios.
+// C# — Repositories/IPessoaRepository.csusing GaragemVeiculos.Models;namespace GaragemVeiculos.Repositories;public interface IPessoaRepository{    List<Pessoa> ObterTodas();    Pessoa? ObterPorId(int id);    void Adicionar(Pessoa pessoa);    void Atualizar(Pessoa pessoa);    void Remover(int id);}
+
+// Java — repository/IPessoaRepository.javapackage br.edu.unirv.garagem.repository;import br.edu.unirv.garagem.model.Pessoa;import java.util.List;import java.util.Optional;public interface IPessoaRepository {    List<Pessoa> obterTodas();    Optional<Pessoa> obterPorId(int id);    void adicionar(Pessoa pessoa);    void atualizar(Pessoa pessoa);    void remover(int id);}
+Proibido
+Ler ou gravar o arquivo JSON dentro do Controller (File.ReadAllText, ObjectMapper, FileWriter etc.).
+Criar o repositório com new PessoaRepository() dentro do Controller: ele chega pelo construtor.
+Manter uma lista static de dados no Controller (o “design ruim” da Aula 3).
+Colocar regra de negócio ou acesso a dados dentro da View.
+4. SOLID aplicado ao projeto
+Cada princípio tem que aparecer no código, e não só no README.
+Princípio
+Como deve aparecer no projeto
+S — Responsabilidade Única
+Model guarda dados e validações. Repository só lê e grava o JSON. Controller só recebe a requisição, chama o repositório e escolhe a View.
+O — Aberto/Fechado
+Trocar o JSON por banco de dados (EF Core ou JPA) deve exigir só uma nova classe de repositório, sem mexer no Controller nem nas Views.
+L — Substituição de Liskov
+Qualquer classe que implemente IPessoaRepository (JSON, memória ou banco) precisa funcionar no Controller sem ajuste.
+I — Segregação de Interfaces
+Uma interface por entidade (IPessoaRepository, IVeiculoRepository, IReservaRepository), cada uma só com os métodos que usa.
+D — Inversão de Dependência
+O Controller depende da interface, recebida pelo construtor. Quem entrega a implementação concreta é o container de DI.
+5. Entrega 1 — Módulo Pessoas (hoje, até 20:50)
+Até hoje, 28/09, às 20:50, o cadastro de Pessoas deve estar completo: listar, cadastrar, editar e excluir, com os dados gravados em pessoas.json.
+Model Pessoa (campos mínimos)
+Campo
+Tipo
+Regra
+Id
+inteiro
+Gerado pelo repositório (maior Id + 1)
+Nome
+texto
+Obrigatório
+CPF
+texto
+Obrigatório e único
+Email
+texto
+Obrigatório, formato válido
+Telefone
+texto
+Opcional
+O grupo pode acrescentar campos.
+Telas e rotas sugeridas
+Operação
+C# (ASP.NET)
+Java (Spring)
+View
+Listar
+GET /Pessoa
+GET /pessoas
+Index
+Cadastrar
+GET e POST /Pessoa/Create
+GET e POST /pessoas/novo
+PessoaForm (vazio)
+Editar
+GET e POST /Pessoa/Edit/{id}
+GET e POST /pessoas/{id}/editar
+PessoaForm (preenchido)
+Excluir
+POST /Pessoa/Delete/{id}
+POST /pessoas/{id}/excluir
+Confirmação antes de excluir
+O mesmo PessoaForm serve para cadastrar e para editar.
+Persistência em JSON
+O PessoaRepository lê o arquivo, altera a lista e grava o arquivo inteiro de novo. Se o arquivo não existir, ele é criado com []. No C#, use System.Text.Json; no Java, o ObjectMapper do Jackson (já vem com o Spring Boot).
+[  {    "id": 1,    "nome": "Ana Souza",    "cpf": "111.222.333-44",    "email": "ana.souza@email.com",    "telefone": "(64) 99999-0001"  }]
+Pronto quando
+A listagem mostra as pessoas gravadas no pessoas.json.
+Cadastrar, editar e excluir funcionam pela tela.
+Campos obrigatórios e CPF duplicado mostram mensagem de erro no formulário.
+Os dados continuam lá depois de parar e iniciar a aplicação.
+O PessoaController recebe IPessoaRepository pelo construtor.
+Nenhuma classe além do PessoaRepository acessa o arquivo.
+6. Entrega 2 — Veículos + Reservas (segunda, até 19:00)
+Até segunda-feira, 05/10, às 19:00, o sistema completo: CRUD de Veículos na mesma arquitetura de Pessoas e a página inicial Reservas, onde o administrador reserva um veículo para uma pessoa por um período.
+Módulo Veículos
+Arquivos: Veiculo, IVeiculoRepository, VeiculoRepository, VeiculoController, VeiculoForm e Index, com dados em veiculos.json. CRUD completo, como em Pessoas.
+Campo
+Tipo
+Regra
+Id
+inteiro
+Gerado pelo repositório
+Placa
+texto
+Obrigatória e única
+Marca
+texto
+Obrigatória
+Modelo
+texto
+Obrigatório
+Ano
+inteiro
+Obrigatório
+Cor
+texto
+Opcional
+Página inicial: Reservas
+Ao abrir o sistema, o usuário cai direto em Reservas. No C#, defina a rota padrão como {controller=Reserva}/{action=Index}/{id?} no Program.cs; no Java, use @GetMapping("/") no ReservaController.
+Arquivos: Reserva, IReservaRepository, ReservaRepository, ReservaController e a View Reserva/Index (um ReservaForm separado é opcional), com dados em reservas.json. O Model Reserva tem, no mínimo: Id, VeiculoId, PessoaId, DataInicio e DataFim.
+A página de Reservas deve:
+Listar as reservas com veículo (placa e modelo), pessoa (nome) e período.
+Criar uma reserva escolhendo veículo e pessoa em listas (select) carregadas dos repositórios, mais data de início e fim.
+Editar o período de uma reserva e cancelar (excluir) uma reserva.
+Mostrar cada veículo como Disponível ou Reservado na data de hoje. O status pode ser calculado a partir das reservas (recomendado) ou gravado no veículo.
+Regra de negócio: um veículo, uma pessoa por período
+Um veículo não pode ter duas reservas com períodos que se sobrepõem. Duas reservas do mesmo veículo entram em conflito quando:
+novaInicio <= existenteFim  E  novaFim >= existenteInicio
+Reserva existente
+Nova reserva (mesmo veículo)
+Resultado
+10/10 a 15/10
+16/10 a 20/10
+Permitida
+10/10 a 15/10
+14/10 a 18/10
+Bloqueada: 14 e 15 se sobrepõem
+10/10 a 15/10
+15/10 a 17/10
+Bloqueada: o dia 15 já está reservado
+10/10 a 15/10
+01/10 a 31/10
+Bloqueada: engloba o período inteiro
+Regras complementares:
+DataFim não pode ser anterior a DataInicio.
+Pessoa e veículo precisam existir nos seus repositórios.
+Ao editar, a reserva não conflita com ela mesma: ignore o próprio Id na verificação.
+Quando bloquear, mostre uma mensagem na tela. A aplicação não pode quebrar.
+A verificação fica fora do Controller: um método como ExisteConflito(veiculoId, inicio, fim, idIgnorado) no IReservaRepository ou uma classe ReservaService. O Controller só chama e exibe o resultado.
+Desafios extras (opcionais)
+Impedir a exclusão de pessoa ou veículo com reserva em andamento ou futura.
+Filtrar reservas por pessoa ou por período.
+Testar o Controller com um repositório falso (mock), como visto na Aula 3.
+7. Como entregar
+Cada grupo usa um repositório público no GitHub para as duas entregas, e todos os integrantes enviam o mesmo link na atividade do Classroom.
+Entrega 1: link do repositório até hoje às 20:50. Vale o último commit antes do prazo.
+Entrega 2: mesmo repositório, até segunda às 19:00, na atividade que será aberta no Classroom.
+README.md na raiz com: nomes dos integrantes, linguagem e framework, comandos para executar e ferramentas de IA usadas.
+Prints no README ou na pasta docs/: na Entrega 1, listagem e formulário de Pessoas; na Entrega 2, a página de Reservas e uma tentativa de reserva em conflito sendo bloqueada.
+Os arquivos .json vão no repositório com alguns registros de exemplo.
+8. Critérios de avaliação
+A arquitetura pesa tanto quanto o funcionamento: um CRUD que funciona com o JSON sendo lido no Controller perde a parte de arquitetura.
+Critério
+Entrega 1
+Entrega 2
+Arquitetura MVC + Repository + DI (arquivos exigidos, interface no construtor, SOLID)
+35%
+30%
+CRUD completo funcionando (Pessoas na 1, Veículos na 2)
+30%
+20%
+Reservas: página inicial, vínculo veículo–pessoa, status e regra de período
+—
+35%
+Persistência em JSON (dados sobrevivem ao reinício)
+20%
+10%
+Validações, README e organização do repositório
+15%
+5%
+Checklist antes de entregar
+Nenhum Controller tem new ...Repository(), lista static de dados ou acesso ao arquivo.
+Cada entidade tem Model, Interface, Repositório, Controller e View de formulário.
+Os dados continuam lá depois de reiniciar a aplicação.
+O README tem integrantes, como executar e as ferramentas de IA usadas.
+Todos os integrantes enviaram o link no Classroom.

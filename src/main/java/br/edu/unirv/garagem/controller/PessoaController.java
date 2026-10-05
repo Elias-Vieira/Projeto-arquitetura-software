@@ -2,9 +2,11 @@ package br.edu.unirv.garagem.controller;
 
 import br.edu.unirv.garagem.model.Pessoa;
 import br.edu.unirv.garagem.repository.IPessoaRepository;
+import br.edu.unirv.garagem.service.ReservaService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.util.Optional;
 
@@ -13,9 +15,11 @@ import java.util.Optional;
 public class PessoaController {
 
     private final IPessoaRepository pessoaRepository;
+    private final ReservaService reservaService;
 
-    public PessoaController(IPessoaRepository pessoaRepository) {
+    public PessoaController(IPessoaRepository pessoaRepository, ReservaService reservaService) {
         this.pessoaRepository = pessoaRepository;
+        this.reservaService = reservaService;
     }
 
     @GetMapping
@@ -74,7 +78,11 @@ public class PessoaController {
     }
 
     @PostMapping("/{id}/excluir")
-    public String excluir(@PathVariable int id) {
+    public String excluir(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        if (reservaService.pessoaTemReservasAtivasOuFuturas(id)) {
+            redirectAttributes.addFlashAttribute("erro", "Não é possível excluir esta pessoa pois ela possui reservas ativas ou futuras.");
+            return "redirect:/pessoas";
+        }
         pessoaRepository.remover(id);
         return "redirect:/pessoas";
     }

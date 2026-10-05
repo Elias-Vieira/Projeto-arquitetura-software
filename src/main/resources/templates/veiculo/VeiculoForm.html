@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="${titulo} + ' - Garagem UniRV'">Formulário de Veículo</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+    <header>
+        <div class="header-container">
+            <a href="/" class="logo">🚘 Garagem <span>UniRV</span></a>
+            <nav>
+                <ul>
+                    <li><a href="/">Reservas</a></li>
+                    <li><a href="/veiculos" class="active">Veículos</a></li>
+                    <li><a href="/pessoas">Pessoas</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="card" style="max-width: 650px; margin: 0 auto;">
+            <div class="card-header">
+                <h1 class="card-title" th:text="${titulo}">Formulário de Veículo</h1>
+                <a href="/veiculos" class="btn btn-secondary">⬅️ Voltar</a>
+            </div>
+
+            <div th:if="${erro}" class="alert-danger" th:text="${erro}">
+                Mensagem de erro aqui.
+            </div>
+
+            <form th:action="${veiculo.id != 0} ? @{/veiculos/{id}/editar(id=${veiculo.id})} : @{/veiculos/novo}" th:object="${veiculo}" method="post">
+                <div class="form-group">
+                    <label class="form-label" for="placa">Placa *</label>
+                    <input type="text" id="placa" th:field="*{placa}" class="form-control" placeholder="Ex: ABC-1D23" style="text-transform: uppercase;" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="marca">Marca *</label>
+                    <input type="text" id="marca" th:field="*{marca}" class="form-control" placeholder="Ex: Toyota" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="modelo">Modelo *</label>
+                    <input type="text" id="modelo" th:field="*{modelo}" class="form-control" placeholder="Ex: Corolla" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="ano">Ano Fabricação *</label>
+                    <input type="number" id="ano" th:field="*{ano}" class="form-control" placeholder="Ex: 2023" min="1900" max="2030" required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label" for="cor">Cor (Opcional)</label>
+                    <input type="text" id="cor" th:field="*{cor}" class="form-control" placeholder="Ex: Prata">
+                </div>
+
+                <div class="form-actions">
+                    <a href="/veiculos" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-success">💾 Salvar Veículo</button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2026 UniRV - Arquitetura de Software ESW430 | Garagem de Veículos (Entrega 2)</p>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-top: 0.4rem;">Integrantes: Nycolas • Wander • Lucas • Elias</p>
+    </footer>
+
+</body>
+</html>
