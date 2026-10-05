@@ -8,8 +8,8 @@ import java.util.Objects;
 
 public class Reserva {
     private int id;
-    private int veiculoId;
-    private int pessoaId;
+    private Integer veiculoId;
+    private Integer pessoaId;
 
     @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     @JsonFormat(pattern = "yyyy-MM-dd")
@@ -22,7 +22,7 @@ public class Reserva {
     public Reserva() {
     }
 
-    public Reserva(int id, int veiculoId, int pessoaId, LocalDate dataInicio, LocalDate dataFim) {
+    public Reserva(int id, Integer veiculoId, Integer pessoaId, LocalDate dataInicio, LocalDate dataFim) {
         this.id = id;
         this.veiculoId = veiculoId;
         this.pessoaId = pessoaId;
@@ -38,19 +38,19 @@ public class Reserva {
         this.id = id;
     }
 
-    public int getVeiculoId() {
+    public Integer getVeiculoId() {
         return veiculoId;
     }
 
-    public void setVeiculoId(int veiculoId) {
+    public void setVeiculoId(Integer veiculoId) {
         this.veiculoId = veiculoId;
     }
 
-    public int getPessoaId() {
+    public Integer getPessoaId() {
         return pessoaId;
     }
 
-    public void setPessoaId(int pessoaId) {
+    public void setPessoaId(Integer pessoaId) {
         this.pessoaId = pessoaId;
     }
 

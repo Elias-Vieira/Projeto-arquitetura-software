@@ -47,10 +47,10 @@ public class ReservaService {
     }
 
     public String validarReserva(Reserva reserva, int idIgnorado) {
-        if (reserva.getVeiculoId() <= 0) {
+        if (reserva.getVeiculoId() == null || reserva.getVeiculoId() <= 0) {
             return "Selecione um veículo válido.";
         }
-        if (reserva.getPessoaId() <= 0) {
+        if (reserva.getPessoaId() == null || reserva.getPessoaId() <= 0) {
             return "Selecione uma pessoa válida.";
         }
         if (reserva.getDataInicio() == null) {
