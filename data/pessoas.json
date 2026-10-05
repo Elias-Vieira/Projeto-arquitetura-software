@@ -10,4 +10,10 @@
   "cpf" : "222.333.444-55",
   "email" : "carlos.oliveira@email.com",
   "telefone" : "(64) 98888-0002"
+}, {
+  "id" : 3,
+  "nome" : "Lucas",
+  "cpf" : "715.574.131-00",
+  "email" : "ncyasooko@teste.com.br",
+  "telefone" : "(64) 99909-5777"
 } ]

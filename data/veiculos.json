@@ -1,26 +1,29 @@
-[
-  {
-    "id": 1,
-    "placa": "ABC-1D23",
-    "marca": "Toyota",
-    "modelo": "Corolla",
-    "ano": 2022,
-    "cor": "Prata"
-  },
-  {
-    "id": 2,
-    "placa": "XYZ-9876",
-    "marca": "Honda",
-    "modelo": "Civic",
-    "ano": 2021,
-    "cor": "Preto"
-  },
-  {
-    "id": 3,
-    "placa": "KKL-4567",
-    "marca": "Fiat",
-    "modelo": "Toro",
-    "ano": 2023,
-    "cor": "Branco"
-  }
-]
+[ {
+  "id" : 1,
+  "placa" : "ABC-1D23",
+  "marca" : "Toyota",
+  "modelo" : "Corolla",
+  "ano" : 2022,
+  "cor" : "Prata"
+}, {
+  "id" : 2,
+  "placa" : "XYZ-9876",
+  "marca" : "Honda",
+  "modelo" : "Civic",
+  "ano" : 2021,
+  "cor" : "Preto"
+}, {
+  "id" : 3,
+  "placa" : "KKL-4567",
+  "marca" : "Fiat",
+  "modelo" : "Toro",
+  "ano" : 2023,
+  "cor" : "Branco"
+}, {
+  "id" : 4,
+  "placa" : "DKVNWO",
+  "marca" : "AKFMEIA",
+  "modelo" : "EIGNA",
+  "ano" : 1999,
+  "cor" : "AZUL"
+} ]
